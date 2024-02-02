@@ -506,6 +506,7 @@ impl<B: UsbBus> UsbClass<B> for Ethernet<'_, B> {
             USB_CLASS_CDC,
             CDC_SUBCLASS_NCM,
             CDC_PROTOCOL_NONE,
+            None
         )?;
 
         // Communication Class Interface (interface n)
@@ -676,6 +677,7 @@ impl<B: UsbBus> UsbClass<B> for Ethernet<'_, B> {
     fn control_out(&mut self, transfer: ControlOut<B>) {
         const REQ_SET_INTERFACE: u8 = 0x0B;
         const REQ_SET_NTB_INPUT_SIZE: u8 = 0x86;
+        const REQ_SET_ETHERNET_PACKET_FILTER: u8 = 0x43;
 
         let req = transfer.request();
 
@@ -701,6 +703,10 @@ impl<B: UsbBus> UsbClass<B> for Ethernet<'_, B> {
                         warn!("ncp: unexpected REQ_SET_NTB_INPUT_SIZE data too short");
                     };
 
+                    let _: Result<()> = transfer.accept();
+                }
+                (control::RequestType::Class, REQ_SET_ETHERNET_PACKET_FILTER) => {
+                    debug!("ethernet: packet_filter");
                     let _: Result<()> = transfer.accept();
                 }
                 _ => {
@@ -772,7 +778,7 @@ impl<B: UsbBus> UsbClass<B> for Ethernet<'_, B> {
         self.request_state = HostNotificationState::Complete;
     }
 
-    fn get_string(&self, index: StringIndex, _lang_id: u16) -> Option<&str> {
+    fn get_string(&self, index: StringIndex, _lang_id: LangID) -> Option<&str> {
         if index == self.mac_address_idx {
             Some(&self.mac_address)
         } else {

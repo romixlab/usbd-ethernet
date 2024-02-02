@@ -11,7 +11,7 @@ authors = ["Daniel Kenyon-Jones"]
 homepage = "https://github.com/dlkj/usbd-ethernet"
 
 [dependencies]
-smoltcp = { version = "0.9", default-features = false, features = [
+smoltcp = { version = "0.10", default-features = false, features = [
     "defmt",
     "proto-ipv4",
     "medium-ethernet",
@@ -19,4 +19,4 @@ smoltcp = { version = "0.9", default-features = false, features = [
 ] }
 defmt = "0.3"
 heapless = { version = "0.7", features = ["defmt-impl"] }
-usb-device = { version = "0.2", features = ["defmt"] }
+usb-device = { version = "0.3", features = ["defmt"] }
