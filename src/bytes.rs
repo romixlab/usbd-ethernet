@@ -33,12 +33,12 @@ pub(crate) trait Buf {
 
     fn get_slice(&mut self, size: usize) -> &[u8];
 
-    fn get_u8(&mut self) -> Option<u8> {
-        const SIZE: usize = core::mem::size_of::<u8>();
-        let value = self.chunk().first().copied()?;
-        self.advance(SIZE);
-        Some(value)
-    }
+    // fn get_u8(&mut self) -> Option<u8> {
+    //     const SIZE: usize = core::mem::size_of::<u8>();
+    //     let value = self.chunk().first().copied()?;
+    //     self.advance(SIZE);
+    //     Some(value)
+    // }
 
     fn get_u16_le(&mut self) -> Option<u16> {
         const SIZE: usize = core::mem::size_of::<u16>();

@@ -401,8 +401,7 @@ impl<'a, B: UsbBus> OutBuf<'a, B> {
             }
 
             data.advance(6); // wHeaderLength, wSequence, wBlockLength
-            let Some(ndp_idx) = data.get_u16_le().map(usize::from)
-            else{
+            let Some(ndp_idx) = data.get_u16_le().map(usize::from) else {
                 warn!("ethernet: NTH too short, unable to read ndp_idx");
                 return Err(UsbError::ParseError);
             };
@@ -424,10 +423,9 @@ impl<'a, B: UsbBus> OutBuf<'a, B> {
         // Process NTB Datagram Pointer
 
         match self.buffer.read(self.buffer.unread(), |data| {
-            let Some(mut ntb_datagram_pointer) = data.get(ndp_offset..ndp_offset + NDP_LEN)
-            else {
-                    warn!("ethernet: NTB datagram pointer out of range or truncated");
-                    return Err(UsbError::ParseError);
+            let Some(mut ntb_datagram_pointer) = data.get(ndp_offset..ndp_offset + NDP_LEN) else {
+                warn!("ethernet: NTB datagram pointer out of range or truncated");
+                return Err(UsbError::ParseError);
             };
 
             // wdSignature
@@ -439,13 +437,11 @@ impl<'a, B: UsbBus> OutBuf<'a, B> {
 
             ntb_datagram_pointer.advance(4); // wLength, reserved
 
-            let Some(datagram_index) = ntb_datagram_pointer.get_u16_le().map(usize::from)
-            else{
+            let Some(datagram_index) = ntb_datagram_pointer.get_u16_le().map(usize::from) else {
                 warn!("ethernet: NTB too short, unable to read datagram_index");
                 return Err(UsbError::ParseError);
             };
-            let Some(datagram_len) = ntb_datagram_pointer.get_u16_le().map(usize::from)
-            else{
+            let Some(datagram_len) = ntb_datagram_pointer.get_u16_le().map(usize::from) else {
                 warn!("ethernet: NTB too short, unable to read datagram_len");
                 return Err(UsbError::ParseError);
             };
@@ -506,7 +502,7 @@ impl<B: UsbBus> UsbClass<B> for Ethernet<'_, B> {
             USB_CLASS_CDC,
             CDC_SUBCLASS_NCM,
             CDC_PROTOCOL_NONE,
-            None
+            None,
         )?;
 
         // Communication Class Interface (interface n)
